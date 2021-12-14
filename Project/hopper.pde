@@ -1,26 +1,25 @@
 Random randomeGen;
 
-class Hopper {
-  PVector location;
-  
+class Hopper extends ObserveEdges {
   public Hopper(float _x, float _y) {
-    location = new PVector(_x, _y);
+    super(_x, _y);
     randomeGen = new Random();
   }
   
   void render() {
     stroke(255, 176, 100);
-    point(location.x, location.y);
+    ellipse(location.x, location.y, 4, 4);
   }
   
   void step() {
-    float stepValueX = (float) randomeGen.nextGaussian() * 4;
-    float stepValueY = (float) randomeGen.nextGaussian() * 4;
+    float stepValueX = (float) randomeGen.nextGaussian() * 3;
+    float stepValueY = (float) randomeGen.nextGaussian() * 3;
     float stepx = int(random(1)) - stepValueX;
     float stepy = int(random(1)) - stepValueY;
     
     location.x += stepx;
     location.y += stepy;
+    checkEdges();
   }
   
   void checkEdges() {
