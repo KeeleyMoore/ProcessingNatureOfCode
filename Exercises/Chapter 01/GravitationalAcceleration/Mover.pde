@@ -10,12 +10,13 @@ class Mover {
   PVector acceleration;
   // The Mover's maximum speed
   float topspeed;
+  boolean returning;
   
-  Mover() {
+  Mover(float x, float y) {
     // Start in the center
-    position = new PVector(width / 2,height / 2);
+    position = new PVector(x,y);
     velocity = new PVector(0,0);
-    topspeed = 5;
+    topspeed = 10;
   }
   
   void update() {
@@ -24,9 +25,9 @@ class Mover {
     PVector mouse = new PVector(mouseX,mouseY);
     PVector direction = PVector.sub(mouse,position);
     direction.normalize();
-
+    
     // Set magnitude of acceleration
-    float distance = position.dist(mouse) / 1000;
+    float distance = position.dist(mouse) / 5000;
     float mag = 0.5 - distance;
     direction.setMag(mag);
     
@@ -36,6 +37,16 @@ class Mover {
     velocity.limit(topspeed);
     // position changes by velocity
     position.add(velocity);
+    recenter(distance);
+  }
+  
+  void recenter(float distance) {
+    if (distance > 2 && !returning) {
+      velocity.mult(0);
+      returning = true;
+    } else if (distance < 2 && !returning) {
+      returning = false;
+    }
   }
   
   void display() {
