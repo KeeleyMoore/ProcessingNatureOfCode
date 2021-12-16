@@ -19,7 +19,7 @@ public class WindyBalloon extends PApplet {
 
 
 
-Balloon balloon;
+Balloon[] balloons = new Balloon[20];
 
 PVector helium;
 PVector wind;
@@ -31,7 +31,10 @@ int balloonSize = 30;
  public void setup() {
   /* size commented out by preprocessor */;
   background(255);
-  balloon = new Balloon(balloonSize);
+  
+  for (int i = 0; i < balloons.length; i++) {
+    balloons[i] = new Balloon(balloonSize);
+  }
   
   // Need to figure out how to reduce heliums height gain when the wind force is stronger
   helium = new PVector(0, -0.02f);
@@ -40,8 +43,9 @@ int balloonSize = 30;
 
  public void setWind() {
   // TODO:: Figure out why the wind tends to the left
-  float windX = map(noise(windNoiseTick.x), 0, 1, -0.5f, 0.5f);
-  float windY = map(noise(windNoiseTick.y), 0, 1, -0.5f, 0.5f);
+  float windX = map(noise(windNoiseTick.x), 0, 1, -1, 1) * 0.4f;
+  float windY = map(noise(windNoiseTick.y), 0, 1, -1, 1) * 0.2f;
+  // println(wind, "wind");
   wind = new PVector(windX, windY);
   windNoiseTick.add(noiseTickStep);
 }
@@ -49,10 +53,12 @@ int balloonSize = 30;
  public void draw() {
   background(255);
   setWind();
-  balloon.applyForce(helium);
-  balloon.applyForce(wind);
-  balloon.update();
-  balloon.render();
+  for (int i = 0; i < balloons.length; i++) {
+    balloons[i].applyForce(helium);
+    balloons[i].applyForce(wind);
+    balloons[i].update();
+    balloons[i].render();
+  }
 }
 class Balloon {
   PVector location;
@@ -60,25 +66,30 @@ class Balloon {
   PVector acceleration;
   int balloonSize;
   float halfBalloonSize;
+  float topSpeed;
   
   Balloon(int _balloonSize) {
     balloonSize = _balloonSize;
     halfBalloonSize = _balloonSize / 2;
     acceleration = new PVector(0, 0);
     velocity = new PVector(0, 0);
-    location = new PVector(width / 2, height / 2);
+    location = new PVector(random(width), random(height));
+    topSpeed = 20;
   }
   
   public void update() {
     velocity.add(acceleration);
     location.add(velocity);
+    
+    velocity.limit(topSpeed);
+    
     acceleration.mult(0);
     checkEdges();
   }
   
   public void render() {
     stroke(0);
-    fill(134, 123, 275);
+    fill(134, 123, 275, 125);
     ellipse(location.x, location.y, balloonSize, balloonSize);
   }
   
@@ -87,20 +98,20 @@ class Balloon {
   }
   
    public void checkEdges() {
+    // println(velocity);
     if (location.x > width) {
       location.x = 0;
     } else if (location.x < 0) {
       location.x = width;
     }
-    // TODO: Apply a bounce effect ( 
-    // Simple: maximum amount of bounces before location.y check value set to equal half of size
-    // Advanced: Catch velocity value before its reset upon hitting the ceiling 
-    //           and use that to create a counter force which is reduced expotentially on each bounce
-    // )
+    
     if (location.y < halfBalloonSize - 1) {
-      velocity.mult(0);
+      velocity.y *= -0.7f;
+      velocity.x *= 0.8f;
       location.y = halfBalloonSize; 
     } else if (location.y > height - (halfBalloonSize - 1)) {
+      velocity.y *= -0.5f;
+      velocity.x *= 0.8f;
       location.y = height - halfBalloonSize; 
     }
   }
