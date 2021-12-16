@@ -1,16 +1,21 @@
 import java.util.*;
 
-Balloon balloon;
+Balloon balloons;
 
 PVector helium;
 PVector wind;
-PVector windNoiseTick = new PVector(0.0, 100);;
+PVector windNoiseTick = new PVector(random(100), random(100));;
 PVector noiseTickStep = new PVector(0.1, 0.1);
 
+int balloonSize = 30;
+
 void setup() {
-  size(400, 600);
+  size(900, 600);
   background(255);
-  balloon = new Balloon();
+  
+  for (i = 0; i < ballons.length; i++;) {
+    balloons[i] = new Balloon(balloonSize);
+  }
   
   // Need to figure out how to reduce heliums height gain when the wind force is stronger
   helium = new PVector(0, -0.02);
@@ -19,8 +24,8 @@ void setup() {
 
 void setWind() {
   // TODO:: Figure out why the wind tends to the left
-  float windX = (noise(windNoiseTick.x) - 0.5) /2;
-  float windY = (noise(windNoiseTick.y) - 0.5) /2;
+  float windX = map(noise(windNoiseTick.x), 0, 1, -0.5, 0.5);
+  float windY = map(noise(windNoiseTick.y), 0, 1, -0.5, 0.5);
   wind = new PVector(windX, windY);
   windNoiseTick.add(noiseTickStep);
 }
@@ -28,7 +33,6 @@ void setWind() {
 void draw() {
   background(255);
   setWind();
-  // balloon.applyForces([helium, wind]);
   balloon.applyForce(helium);
   balloon.applyForce(wind);
   balloon.update();
