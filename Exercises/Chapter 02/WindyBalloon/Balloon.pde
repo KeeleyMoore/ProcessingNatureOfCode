@@ -5,14 +5,16 @@ class Balloon {
   int balloonSize;
   float halfBalloonSize;
   float topSpeed;
+  float mass;
   
-  Balloon(int _balloonSize) {
+  Balloon(int _balloonSize, float _m) {
     balloonSize = _balloonSize;
     halfBalloonSize = _balloonSize / 2;
     acceleration = new PVector(0, 0);
     velocity = new PVector(0, 0);
     location = new PVector(random(width), random(height));
     topSpeed = 20;
+    mass = _m;
   }
   
   public void update() {
@@ -32,11 +34,14 @@ class Balloon {
   }
   
   public void applyForce(PVector force) {
-    acceleration.add(force);
+    // acceleration.add(force);
+    
+    PVector f = force.get();
+    f.div(mass);
+    acceleration.add(f);
   }
   
   void checkEdges() {
-    // println(velocity);
     if (location.x > width) {
       location.x = 0;
     } else if (location.x < 0) {
