@@ -12,16 +12,10 @@ class Mover {
     location = new PVector(x, y);
     velocity = new PVector(0, 0);
     acceleration = new PVector(0, 0);
+    
     topSpeed = 10;
     mass = m;
     massSizeScalar = 16;
-  }
-  
-  void update() {
-    velocity.add(acceleration);
-    velocity.limit(topSpeed);
-    
-    location.add(velocity);
   }
   
   public void applyForce(PVector force) {
@@ -31,18 +25,27 @@ class Mover {
     acceleration.mult(0);
   }
   
+  void update() {
+    velocity.add(acceleration);
+    velocity.limit(topSpeed);
+    
+    location.add(velocity);
+    acceleration.mult(0);
+  }
+  
+  
   void display() {
     stroke(0);
     fill(175);
     ellipse(location.x, location.y, mass * massSizeScalar, mass * massSizeScalar);
   }
   
-  void checkEdges() {
+  public void checkEdges() {
     if (location.x > width) {
-      location.x = 0;
+      location.x = width;
       velocity.x *= -1;
     } else if (location.x < 0) {
-      location.x = width;
+      location.x = 0;
       velocity.x *= -1;
     }
     
