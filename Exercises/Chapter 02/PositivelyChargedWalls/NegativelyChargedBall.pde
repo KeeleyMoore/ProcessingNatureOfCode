@@ -32,21 +32,21 @@ class NegativelyChargedBall {
     
     acceleration.mult(0);
   }
-
+  
   void calculateDistance() {
     if (location.x / 2 < width / 2) {
-      // distance.x = location.x;
+      distance.x = location.x - (width / 2);
     } else {
-      // distance.x = location.x - (width - massSizeScalar);
+      distance.x = (width - massSizeScalar) - location.x;
     }
     
     if (location.y / 2 < height / 2) {
-      // distance.y = location.y;
+      distance.y = location.y - (height / 2);
     } else {
-      // distance.y = location.y - (height - massSizeScalar);
+      distance.y = (height - massSizeScalar) - location.y;
     }
-    print(distance.x);
-    print(distance.y);
+    println(distance.x);
+    println(distance.y);
   }
   
   void update() {
