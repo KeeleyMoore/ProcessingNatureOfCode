@@ -21,8 +21,6 @@ class Mover {
   public void applyForce(PVector force) {
     f = new PVector.div(force, mass);
     acceleration.add(f);
-    
-    acceleration.mult(0);
   }
   
   void update() {

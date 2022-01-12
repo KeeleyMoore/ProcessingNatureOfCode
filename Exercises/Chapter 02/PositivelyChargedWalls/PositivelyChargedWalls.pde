@@ -1,6 +1,6 @@
 import java.util.*;
 
-NegativelyChargedBall[] balls = new NegativelyChargedBall[1];
+NegativelyChargedBall[] balls = new NegativelyChargedBall[20];
 
 void setup() {
   size(1400, 1000);

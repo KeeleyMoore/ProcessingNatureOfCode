@@ -3,7 +3,7 @@ class NegativelyChargedBall {
   PVector velocity;
   PVector acceleration;
   
-  PVector distance;
+  PVector magneticForce;
   
   float topSpeed;
   float mass;
@@ -23,35 +23,38 @@ class NegativelyChargedBall {
     
     magneticRange = 30;
     
-    distance = new PVector();
+    magneticForce = new PVector();
   }
   
-  public void applyForce(PVector force) {
+  void applyForce(PVector force) {
     PVector f = PVector.div(force, mass);
     acceleration.add(f);
-    
-    acceleration.mult(0);
   }
   
-  void calculateDistance() {
-    if (location.x / 2 < width / 2) {
-      distance.x = location.x - (width / 2);
-    } else {
-      distance.x = (width - massSizeScalar) - location.x;
-    }
+  void calculateMagneticForce() {
+    magneticForce.x = (width / 2) - location.x;
+    // if (location.x < width / 2) {
+    // magneticForce.x = (width / 2) - location.x;
+    // } else {
+    //   // magneticForce.x = location.x - width;
+    //   magneticForce.x = ((width / 2) - location.x);
+    // }
     
-    if (location.y / 2 < height / 2) {
-      distance.y = location.y - (height / 2);
-    } else {
-      distance.y = (height - massSizeScalar) - location.y;
-    }
-    println(distance.x);
-    println(distance.y);
+    magneticForce.y = (height / 2 - location.y);
+    // if (location.y < height / 2) {
+    // magneticForce.y = (location.y - height) * - 1;
+    // } else {
+    // magneticForce.y = (height - location.y);
+    // }
+    
+    magneticForce.mult(0.001);
   }
   
   void update() {
-    calculateDistance();
-    applyForce(distance);
+    calculateMagneticForce();
+    println(magneticForce.y);
+    // println(magneticForce.x);
+    applyForce(magneticForce);
     
     velocity.add(acceleration);
     velocity.limit(topSpeed);
@@ -59,7 +62,6 @@ class NegativelyChargedBall {
     location.add(velocity);
     acceleration.mult(0);
   }
-  
   
   void display() {
     stroke(0);
